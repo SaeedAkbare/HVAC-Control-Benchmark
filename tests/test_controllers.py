@@ -72,8 +72,8 @@ def test_open_loop_keeps_initial_schedule_and_mpc_only_uses_first_action(monkeyp
 def test_closed_loop_metrics_include_common_recovery_and_independent_replay():
     scenario = generate(PERIODS[0], "nominal", hours=1, start_hour=8)
     metrics, rows = evaluate(scenario, "thermostat", Settings())
-    assert len(rows) == 4 + 24
-    assert sum(r["phase"] == "recovery" for r in rows) == 24
+    assert len(rows) == 4 + Settings().recovery_steps
+    assert sum(r["phase"] == "recovery" for r in rows) == Settings().recovery_steps
     assert metrics["total_cost_eur"] == pytest.approx(
         metrics["operation_cost_eur"] + metrics["recovery_cost_eur"])
     assert metrics["replay_temperature_error_c"] < 1e-6
@@ -94,3 +94,17 @@ def test_controller_receives_nominal_model_under_loss_mismatch(monkeypatch):
     evaluate(scenario, "thermostat", Settings())
     assert seen == [Model().ua] * 4
     assert scenario.plant.ua != Model().ua
+
+
+def test_common_recovery_can_restore_a_cold_zone_with_severe_heat_loss():
+    # The initial six-hour protocol left some winter runs with energy debt.
+    # Start conservatively below the occupied band and exercise the shared rule.
+    from hvac_benchmark.physics import limit_action
+    scenario = generate(PERIODS[0], "loss_severe")
+    state, nominal, settings = State(16.0, 1400.0), Model(), Settings()
+    for forcing in scenario.realized[scenario.evaluation_steps:]:
+        request = controllers.thermostat(state, forcing, nominal, settings.dt, recovery=True)
+        applied, _ = limit_action(state, request, forcing, scenario.plant, settings.dt)
+        state = step(state, applied, forcing, scenario.plant, settings.dt)
+    assert abs(state.temperature - 22.0) <= 0.05
+    assert state.co2 <= 601.0

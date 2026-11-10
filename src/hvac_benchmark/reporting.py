@@ -23,7 +23,7 @@ def markdown_report(metrics, suite_name):
     lines = [
         "# Simulation results", "",
         f"Suite: **{suite_name}**. All values are simulated, using surrogate inputs.",
-        "Cost and meter energy include the common six-hour recovery. Comfort columns",
+        "Cost and meter energy include the common twelve-hour recovery. Comfort columns",
         "cover the operation period. Read each cost alongside both comfort measures,",
         "solver fallbacks, and terminal recovery success. No field savings are implied.", "",
         "| Scenario | Controller | Cost (EUR) | Electricity (kWh) | Gas (kWh) | Temperature (K h) | CO2 (ppm h) | Fallbacks | Recovery reached |",

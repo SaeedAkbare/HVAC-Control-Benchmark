@@ -56,7 +56,7 @@ def generate(period: Period, case: str, hours: float = 24.0,
     n = round(hours / dt)
     plan, realized = [], []
     severe = case.endswith("severe")
-    for k in range(n + round(6 / dt)):
+    for k in range(n + round(12 / dt)):
         hour = (start_hour + k * dt) % 24
         outdoor = (period.mean + offset
                    + period.amplitude * cos(2 * pi * (hour - 15 - phase) / 24)
@@ -67,7 +67,7 @@ def generate(period: Period, case: str, hours: float = 24.0,
         planned_people = 24.0 if 8 <= hour < 18 else 0.0
         people = planned_people
         actual_outdoor = outdoor
-        if case.startswith("weather"):
+        if case.startswith("weather") and k < n:
             # One persistent event: rise 08-10, plateau 10-16, decay 16-18.
             envelope = max(0.0, min((hour - 8) / 2, 1.0, (18 - hour) / 2))
             actual_outdoor += period.error_sign * (6 if severe else 3) * envelope

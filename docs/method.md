@@ -83,7 +83,7 @@ Heating and cooling are continuous, have capacity limits, and cannot run simulta
 
 The objective is the predicted operating energy bill plus soft-comfort penalties: 100 EUR/(K h) for temperature below/above the band and 100 EUR/(1000 ppm h) for excess CO2. Penalties are numerical priorities, not social or health valuations. They are not a lexicographic guarantee of minimum violations. The MILP penalizes endpoint violations; evaluation integrates actual violations over the whole interval.
 
-SciPy calls HiGHS with a 1% relative MIP gap and a configurable time limit. Status, solve time, and reported gap are recorded. A finite incumbent from a time-limited solve is accepted only after explicit row, variable-bound, and integrality checks. An accepted incumbent is labeled `feasible_limit`, not optimal. No incumbent, invalid constraints, or a solver error causes an explicit fallback. A reported optimum is only within the requested solver tolerance.
+SciPy calls HiGHS with a 1% relative MIP gap and a configurable time limit. Status, solve time, and reported gap are recorded. Recorded solve time includes Python model construction, the solver, and any fallback rollout; it can exceed the solver's own budget. A thermostat's zero solve-call count means it uses no MILP, not that its control code takes zero CPU time. A finite incumbent from a time-limited solve is accepted only after explicit row, variable-bound, and integrality checks. An accepted incumbent is labeled `feasible_limit`, not optimal. No incumbent, invalid constraints, or a solver error causes an explicit fallback. A reported optimum is only within the requested solver tolerance.
 
 Fallback counts are **solve events**. One open-loop fallback can affect an entire day; one MPC fallback affects one action. Compare these counts with the number of solve calls and the trace, not as equal-duration events.
 
@@ -97,7 +97,7 @@ This is an ideal simulation of actuator protection with the current physical con
 
 All methods start at 22 C and 600 ppm and run against identical realized inputs. There is no warm-up or hidden method-specific initial state.
 
-After the scored operating day, all controllers are replaced by the same recovery thermostat for six hours. The zone is empty, the temperature target is 22 C, and the CO2 goal is at most 600 ppm. Recovery uses the same seasonal weather and prices, actual plant, and equipment limits. Its energy and cost are included in the primary totals. Operation and recovery comfort metrics are reported separately.
+After the scored operating day, all controllers are replaced by the same recovery thermostat for 12 hours. The zone is empty, the temperature target is 22 C, and the CO2 goal is at most 600 ppm. Recovery uses the same seasonal weather and prices, actual plant, and equipment limits. Its energy and cost are included in the primary totals. Operation and recovery comfort metrics are reported separately.
 
 The optimizer has no artificial terminal equality or terminal value function. A common physical continuation makes end-of-day energy debt visible, but cannot guarantee identical final states under every capacity limit. The report therefore includes final T, final CO2, and a recovery-success flag (within 0.05 C of 22 C and at most 1 ppm above 600 ppm). **If that flag is false, a raw cost difference is not an equivalent-service saving.** This limitation also applies to custom severe conditions.
 

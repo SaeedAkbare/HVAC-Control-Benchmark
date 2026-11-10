@@ -15,3 +15,10 @@ Validation was executed on GitHub Actions, not on the maintainer's local compute
 Smoke used a one-second MILP budget per call. Several accepted incumbents had large relative MIP gaps, approaching one. This means the run validates execution and feasibility, not near-optimal economic performance. The small smoke horizon is also not the all-day disturbance experiment. See the method for how recovery and comfort affect cost comparisons.
 
 The ODE replay is independent numerical implementation of the same assumed physics. It is not validation against measured building behavior.
+
+
+## Terminal protocol correction
+
+The first full run completed all 84 controller experiments and passed replay and physical audits, but 20 runs did not reach the terminal recovery target after six hours. This is a protocol limitation, not a test failure to hide. The recovery duration is now 12 hours for every method, and a cold-start/severe-heat-loss regression was added. The single weather disturbance is also prevented from repeating in the next morning's recovery period.
+
+The revised source requires a new complete Actions run. Results from the six-hour run must not be mixed with the revised protocol.

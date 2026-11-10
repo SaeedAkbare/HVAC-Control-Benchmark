@@ -17,7 +17,7 @@ python -m pytest -q
 hvac-benchmark --suite smoke --output results
 ```
 
-The smoke suite runs 12 controller experiments: winter and summer, nominal and early/high occupancy, four operating hours plus six hours of common recovery. It is an integration check, not an all-day performance study.
+The smoke suite runs 12 controller experiments: winter and summer, nominal and early/high occupancy, four operating hours plus 12 hours of common recovery. It is an integration check, not an all-day performance study.
 
 ```bash
 hvac-benchmark --suite full --output results-full
@@ -48,7 +48,7 @@ Each output directory contains:
 - `metadata.json`: source revision in CI, package versions, assumptions, seeds, and solver settings.
 - `report.md`: readable results, produced from the actual run.
 
-Cost includes a common six-hour recovery under the same rule controller. Final-state differences are still reported; a failed recovery target prevents a simple equivalent-service savings claim.
+Cost includes a common 12-hour recovery under the same rule controller. Final-state differences are still reported; a failed recovery target prevents a simple equivalent-service savings claim.
 
 GitHub Actions runs regression tests, the smoke suite, and the full suite on main. Download `smoke-results` or `full-results` from a successful [Actions run](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions). No local checkout or local execution was used to initialize this repository.
 

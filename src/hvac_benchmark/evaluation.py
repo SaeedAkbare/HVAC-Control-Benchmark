@@ -87,8 +87,8 @@ def physical_audit(states, actions, forcings, plant):
 def evaluate(scenario: Scenario, controller_name: str, settings: Settings):
     if abs(settings.dt - scenario.dt) > 1e-10:
         raise ValueError("scenario/controller timestep mismatch")
-    if settings.recovery_steps != round(6 / settings.dt):
-        raise ValueError("this experiment requires the common six-hour recovery")
+    if settings.recovery_steps != round(12 / settings.dt):
+        raise ValueError("this experiment requires the common twelve-hour recovery")
     nominal = Model()
     controller = CONTROLLERS[controller_name]()
     state = INITIAL
