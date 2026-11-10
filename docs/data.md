@@ -8,7 +8,7 @@ This choice keeps provenance clear and the experiment reproducible without distr
 
 ## Seasonal days
 
-Each full experiment covers one hypothetical weekday, 00:00-24:00 in a fixed local-clock model without a calendar or daylight-saving transition, followed by 12 hours of empty-zone recovery.
+Each full experiment covers one hypothetical weekday, 00:00-24:00 in a fixed local-clock model without a calendar or daylight-saving transition, followed by 16 hours of empty-zone recovery.
 
 | Period | Mean C | Daily amplitude C | Seed | Weather-error direction |
 |---|---:|---:|---:|---|

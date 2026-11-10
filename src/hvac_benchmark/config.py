@@ -48,7 +48,7 @@ class Settings:
     mip_gap: float = 0.01
     temperature_penalty: float = 100.0  # EUR/(K h), soft objective only
     co2_penalty: float = 100.0  # EUR/(1000 ppm h), soft objective only
-    recovery_steps: int = 48  # common twelve-hour continuation
+    recovery_steps: int = 64  # common sixteen-hour continuation
 
 
 @dataclass(frozen=True)

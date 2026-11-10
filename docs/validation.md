@@ -22,3 +22,6 @@ The ODE replay is independent numerical implementation of the same assumed physi
 The first full run completed all 84 controller experiments and passed replay and physical audits, but 20 runs did not reach the terminal recovery target after six hours. This is a protocol limitation, not a test failure to hide. The recovery duration is now 12 hours for every method, and a cold-start/severe-heat-loss regression was added. The single weather disturbance is also prevented from repeating in the next morning's recovery period.
 
 The revised source requires a new complete Actions run. Results from the six-hour run must not be mixed with the revised protocol.
+
+
+The new conservative recovery regression also found a 0.1213 C deficit at 12 hours (28 other tests passed). The common duration is therefore 16 hours, retaining the 0.05 C target tolerance. This correction changes the terminal protocol for all controllers; it does not tune their operating-day behavior to favor a method.

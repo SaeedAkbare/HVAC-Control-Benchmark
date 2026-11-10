@@ -56,7 +56,7 @@ def generate(period: Period, case: str, hours: float = 24.0,
     n = round(hours / dt)
     plan, realized = [], []
     severe = case.endswith("severe")
-    for k in range(n + round(12 / dt)):
+    for k in range(n + round(16 / dt)):
         hour = (start_hour + k * dt) % 24
         outdoor = (period.mean + offset
                    + period.amplitude * cos(2 * pi * (hour - 15 - phase) / 24)

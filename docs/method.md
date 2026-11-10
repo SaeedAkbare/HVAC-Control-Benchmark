@@ -97,7 +97,7 @@ This is an ideal simulation of actuator protection with the current physical con
 
 All methods start at 22 C and 600 ppm and run against identical realized inputs. There is no warm-up or hidden method-specific initial state.
 
-After the scored operating day, all controllers are replaced by the same recovery thermostat for 12 hours. The zone is empty, the temperature target is 22 C, and the CO2 goal is at most 600 ppm. Recovery uses the same seasonal weather and prices, actual plant, and equipment limits. Its energy and cost are included in the primary totals. Operation and recovery comfort metrics are reported separately.
+After the scored operating day, all controllers are replaced by the same recovery thermostat for 16 hours. The zone is empty, the temperature target is 22 C, and the CO2 goal is at most 600 ppm. Recovery uses the same seasonal weather and prices, actual plant, and equipment limits. Its energy and cost are included in the primary totals. Operation and recovery comfort metrics are reported separately.
 
 The optimizer has no artificial terminal equality or terminal value function. A common physical continuation makes end-of-day energy debt visible, but cannot guarantee identical final states under every capacity limit. The report therefore includes final T, final CO2, and a recovery-success flag (within 0.05 C of 22 C and at most 1 ppm above 600 ppm). **If that flag is false, a raw cost difference is not an equivalent-service saving.** This limitation also applies to custom severe conditions.
 

@@ -59,7 +59,7 @@ def test_full_suite_is_four_seasons_and_seven_cases_without_tuning_seed():
 
 def test_weather_event_does_not_repeat_during_terminal_recovery():
     scenario = generate(PERIODS[0], "weather_severe")
-    assert len(scenario.realized) == 96 + 48
+    assert len(scenario.realized) == 96 + 64
     for actual, announced in zip(scenario.realized[96:], scenario.plan[96:]):
         assert actual == announced
         assert actual.people == 0
