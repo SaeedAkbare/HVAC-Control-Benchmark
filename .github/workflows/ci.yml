@@ -1,8 +1,14 @@
 name: CI
 on:
+  push:
+    branches: [main]
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: benchmark-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -16,8 +22,32 @@ jobs:
       - run: python -m pip install -r requirements.txt
       - run: python -m pip install --no-deps -e .
       - run: python -m pytest -q
-      - run: hvac-benchmark --suite smoke --output results --time-limit 1
+      - name: Run integration smoke benchmark
+        run: hvac-benchmark --suite smoke --output results --time-limit 1
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: smoke-results
           path: results/
+          if-no-files-found: ignore
+  benchmark:
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python -m pip install --no-deps -e .
+      - name: Run all seasons and disturbance levels
+        run: hvac-benchmark --suite full --output results --time-limit 0.5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-results
+          path: results/
+          if-no-files-found: ignore
