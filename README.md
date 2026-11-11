@@ -50,13 +50,24 @@ Each output directory contains:
 
 Cost includes a common 16-hour recovery under the same rule controller. Final-state differences are still reported; a failed recovery target prevents a simple equivalent-service savings claim.
 
-GitHub Actions runs regression tests, the smoke suite, and the full suite on main. Download `smoke-results` or `full-results` from a successful [Actions run](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions).
+GitHub Actions runs regression tests, both smoke entry points, and the bounded sensitivity study on main source changes. The original full reference suite remains available through manual workflow dispatch. Download `smoke-results`, `sensitivity-results`, or `full-results` from the corresponding successful [Actions run](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions).
 
 ## Verified reference run
 
 The [reference run](reports/reference-2026-11-10/README.md) completed **29 tests, 12 smoke runs, and 84 full controller runs** on GitHub Actions. All full runs passed independent replay and actuator audits and reached the common recovery target.
 
 The 0.5-second full-CI solver budget was too short to certify any day-ahead plan within the requested optimality tolerance. Several returned plans had large comfort violations. The archived results show those limitations explicitly; controller economic rankings require a stronger solver-budget study.
+
+## Sensitivity study
+
+[The predeclared sensitivity protocol](docs/sensitivity.md) separates solver-budget effects, penalty-weight effects, matched-window feedback diagnostics, and a small evaluation on new seeds. It reuses the existing controllers and evaluator.
+
+```bash
+hvac-benchmark sensitivity --output reports/sensitivity-nominal
+hvac-benchmark sensitivity --stage all --output reports/sensitivity-initial
+```
+
+The default nominal stage runs winter and summer at 0.5, 2, 10 and 30 seconds per day-ahead solve, then changes one penalty weight at a time at a fixed budget. Later stages use a hashed settings file frozen before held-out evaluation. Acceptance checks distinguish equipment feasibility, practical comfort and solver quality; equal per-call time is not equal total computation.
 
 ## Read the method
 

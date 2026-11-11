@@ -16,6 +16,10 @@ from .scenarios import suite
 
 
 def main(argv=None):
+    argv = sys.argv[1:] if argv is None else list(argv)
+    if argv and argv[0] == "sensitivity":
+        from .sensitivity import main as sensitivity_main
+        return sensitivity_main(argv[1:])
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--suite", choices=("smoke", "full"), default="smoke")
     parser.add_argument("--output", type=Path, default=Path("results"))

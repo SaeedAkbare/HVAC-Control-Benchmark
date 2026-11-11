@@ -119,6 +119,7 @@ def evaluate(scenario: Scenario, controller_name: str, settings: Settings):
         next_state = step(state, action, observed, scenario.plant, settings.dt)
         electricity, gas = energy(action, scenario.plant, settings.dt)
         low, high, cap = ((21.8, 22.2, 600.0) if recovery else comfort(observed.people))
+        diagnostic = (solve.diagnostics or {}) if solve else {}
         rows.append({
             "scenario": scenario.name, "controller": controller_name,
             "step": k, "phase": "recovery" if recovery else "operation",
@@ -140,6 +141,16 @@ def evaluate(scenario: Scenario, controller_name: str, settings: Settings):
             "actuator_override": int(changed), "solve_status": status,
             "solve_seconds": solve.seconds if solve else 0.0,
             "solve_gap": solve.gap if solve else None,
+            "solve_called": solve is not None,
+            "solve_fallback": solve.fallback if solve else None,
+            "solve_forecast_steps": len(solve.actions) if solve else None,
+            "solve_objective": solve.objective if solve else None,
+            **{f"solver_{key}": diagnostic.get(key) for key in (
+                "raw_status", "message", "incumbent_valid", "incumbent_objective",
+                "dual_bound", "gap", "node_count", "energy_objective",
+                "temperature_penalty_objective", "co2_penalty_objective")},
+
+
             "predicted_next_temperature_c": solve.predicted[0].temperature if solve else None,
             "predicted_next_co2_ppm": solve.predicted[0].co2 if solve else None,
         })
@@ -159,6 +170,7 @@ def evaluate(scenario: Scenario, controller_name: str, settings: Settings):
         "total_cost_eur": sum(r["cost_eur"] for r in rows),
         "total_electricity_kwh": sum(r["electricity_kwh"] for r in rows),
         "total_gas_kwh": sum(r["gas_kwh"] for r in rows),
+        "equipment_audit_passed": True, "replay_audit_passed": True,
         "solve_calls": len(solves),
         "solve_seconds_total": sum(s.seconds for s in solves),
         "solve_seconds_mean": float(np.mean([s.seconds for s in solves])) if solves else 0.0,

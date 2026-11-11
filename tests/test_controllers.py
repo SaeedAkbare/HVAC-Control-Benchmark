@@ -15,6 +15,13 @@ def test_milp_predictions_replay_under_the_matched_model():
     future = tuple(Forcing(7, 24, price) for price in (0.15, 0.20, 0.30, 0.25))
     plan = optimize_plan(INITIAL, future, model, settings)
     assert not plan.fallback, plan.status
+    assert plan.diagnostics["incumbent_valid"] is True
+    assert plan.diagnostics["raw_status"] in (0, 1)
+    assert plan.diagnostics["dual_bound"] <= plan.objective + 1e-5
+    assert plan.objective == pytest.approx(
+        plan.diagnostics["energy_objective"]
+        + plan.diagnostics["temperature_penalty_objective"]
+        + plan.diagnostics["co2_penalty_objective"], abs=1e-5)
     state, states = INITIAL, [INITIAL]
     for action, forcing, predicted in zip(plan.actions, future, plan.predicted):
         assert min(action.heat, action.cool) <= 1e-5
@@ -26,11 +33,14 @@ def test_milp_predictions_replay_under_the_matched_model():
 
 
 def test_no_incumbent_uses_an_explicit_feasible_rule_plan(monkeypatch):
-    monkeypatch.setattr(controllers, "milp", lambda *a, **k: OptimizeResult(status=1, x=None))
+    monkeypatch.setattr(controllers, "milp", lambda *a, **k: OptimizeResult(status=1, x=None, mip_dual_bound=0.25, fun=None))
     future = (Forcing(5, 24, 0.2),) * 3
     plan = optimize_plan(INITIAL, future, Model(), Settings())
     assert plan.fallback
     assert plan.status == "fallback_status_1"
+    assert plan.diagnostics["dual_bound"] == 0.25
+    assert plan.diagnostics["incumbent_objective"] is None
+    assert plan.diagnostics["incumbent_valid"] is False
     assert len(plan.actions) == 3
     physical_audit([INITIAL] + plan.predicted, plan.actions, future, Model())
 
@@ -41,6 +51,7 @@ def test_invalid_incumbent_is_not_silently_executed(monkeypatch):
     monkeypatch.setattr(controllers, "milp", invalid)
     plan = optimize_plan(INITIAL, (Forcing(5, 24, 0.2),), Model(), Settings())
     assert plan.fallback
+    assert plan.diagnostics["incumbent_valid"] is False
 
 
 def test_open_loop_keeps_initial_schedule_and_mpc_only_uses_first_action(monkeypatch):

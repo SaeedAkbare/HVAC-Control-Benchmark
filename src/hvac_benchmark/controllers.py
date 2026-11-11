@@ -55,6 +55,7 @@ class Plan:
     gap: float | None
     fallback: bool
     objective: float | None
+    diagnostics: dict | None = None
 
 
 class LinearModel:
@@ -100,7 +101,7 @@ class LinearModel:
                           shape=(len(self.lo), len(self.lower))).tocsc()
 
 
-def _fallback(state, future, model, settings, started, status):
+def _fallback(state, future, model, settings, started, status, diagnostics=None):
     actions, predicted = [], []
     for forcing in future:
         action = thermostat(state, forcing, model, settings.dt)
@@ -108,7 +109,7 @@ def _fallback(state, future, model, settings, started, status):
         actions.append(action)
         predicted.append(state)
     return Plan(actions, predicted, perf_counter() - started,
-                status, None, True, None)
+                status, None, True, None, diagnostics)
 
 
 def optimize_plan(state: State, future: tuple[Forcing, ...],
@@ -190,9 +191,32 @@ def optimize_plan(state: State, future: tuple[Forcing, ...],
                  and np.all(rows >= np.asarray(lp.lo) - 1e-5)
                  and np.all(rows <= np.asarray(lp.hi) + 1e-5)
                  and np.all(abs(x[integers] - np.rint(x[integers])) <= 1e-5))
+    def finite_attribute(name):
+        value = getattr(result, name, None)
+        return float(value) if value is not None and np.isfinite(value) else None
+
+    diagnostics = {
+        "raw_status": int(result.status),
+        "message": str(getattr(result, "message", "")),
+        "incumbent_valid": bool(valid),
+        "incumbent_objective": finite_attribute("fun"),
+        "dual_bound": finite_attribute("mip_dual_bound"),
+        "gap": finite_attribute("mip_gap"),
+        "node_count": finite_attribute("mip_node_count"),
+        "energy_objective": None,
+        "temperature_penalty_objective": None,
+        "co2_penalty_objective": None,
+    }
     if not valid:
         return _fallback(state, future, model, settings, started,
-                         f"fallback_status_{result.status}")
+                         f"fallback_status_{result.status}", diagnostics)
+    costs = np.asarray(lp.cost)
+    energy_indices = np.concatenate((heat, cool, z.ravel()))
+    diagnostics.update({
+        "energy_objective": float(costs[energy_indices] @ x[energy_indices]),
+        "temperature_penalty_objective": float(costs[tl] @ x[tl] + costs[tu] @ x[tu]),
+        "co2_penalty_objective": float(costs[cs] @ x[cs]),
+    })
     actions = [Action(int(np.argmax(x[z[k]])), max(0.0, float(x[heat[k]])),
                       max(0.0, float(x[cool[k]]))) for k in range(n)]
     predicted = [State(float(x[temp[k + 1]]), float(x[co2[k + 1]]) * 1000)
@@ -201,7 +225,7 @@ def optimize_plan(state: State, future: tuple[Forcing, ...],
     gap = float(gap) if gap is not None and np.isfinite(gap) else None
     return Plan(actions, predicted, perf_counter() - started,
                 "optimal_tolerance" if result.status == 0 else "feasible_limit",
-                gap, False, float(result.fun))
+                gap, False, float(result.fun), diagnostics)
 
 
 @dataclass
