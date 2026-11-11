@@ -1,27 +1,35 @@
 # Validation record
 
-Validation was executed on GitHub Actions, not on the maintainer's local computer.
+All execution described here took place on GitHub Actions. The original local project was not used or modified.
 
-## First runnable version
+## Current verified version
 
-- Source revision: [22d4d090345051ee516b4e4f259f699187897573](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/commit/22d4d090345051ee516b4e4f259f699187897573).
-- [Actions run](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/42794146594), started 10 November 2026.
+- Tested source: [322c2bcb1c45cdcfb76b3136fe75051b1e4f3595](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/commit/322c2bcb1c45cdcfb76b3136fe75051b1e4f3595).
+- [Successful Actions run](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/42804919624), executed 10 November 2026; results reviewed and recorded 11 November 2026.
 - Python 3.11.18, NumPy 2.2.6, SciPy 1.15.3, Matplotlib 3.10.3, pytest 8.3.5.
-- **27 regression tests passed**. Coverage includes independent ODE agreement, conservation/zero-flow behavior, supply and meter checks, threshold-crossing metrics, deterministic scenarios, causal forecasts, solver-output rejection, frozen open-loop scheduling, first-action MPC, and nominal model isolation during plant mismatch.
-- **12 smoke controller runs completed**, with independent replay and physical actuator audits passing. All 12 reached the common recovery target.
-- [Smoke artifact: CSVs, metadata, plots, and generated report](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/42794146594/artifacts/13752733106).
-- The full 84-controller-run benchmark was still running when this documentation snapshot was written. No full-suite pass or full-suite performance result is claimed here yet.
+- **29 regression tests passed**.
+- **12 smoke controller runs and 84 full controller runs completed**.
+- **All 84 full runs reached the terminal recovery target**, with zero solver fallbacks.
+- All full runs passed independent ODE replay and physical actuator audits. Maximum replay discrepancy was 2.096e-13 C and 1.077e-7 ppm.
+- [Permanent reference results and interpretation](../reports/reference-2026-11-10/README.md), including every metric row and run provenance.
+- [Full artifacts](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/42804919624/artifacts/13758946685) and [smoke artifacts](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/42804919624/artifacts/13757209478) contain executed traces, figures, metadata, and generated reports.
 
-Smoke used a one-second MILP budget per call. Several accepted incumbents had large relative MIP gaps, approaching one. This means the run validates execution and feasibility, not near-optimal economic performance. The small smoke horizon is also not the all-day disturbance experiment. See the method for how recovery and comfort affect cost comparisons.
+Regression coverage includes exact/independent ODE agreement, zero-flow behavior, supply and meter limits, threshold-crossing metrics, deterministic inputs, causal forecasts, invalid solver-output rejection, frozen open-loop scheduling, first-action MPC, nominal model isolation under plant mismatch, and severe cold recovery.
 
-The ODE replay is independent numerical implementation of the same assumed physics. It is not validation against measured building behavior.
+## What the pass does and does not establish
 
+The pass verifies package execution, accounting, physical consistency, and the stated tests. It is not field validation or a certificate of economically optimal control.
+
+The full reference run used a **0.5-second solver limit**. All 28 day-ahead solves and 1,549 of 2,688 MPC solves returned accepted time-limited incumbents. The other 1,139 MPC solves ended within the requested 1% solver tolerance. Worst reported gaps approached one. Several day-ahead plans had large comfort violations, even in the nominal case: comfort constraints are soft and a hardware-feasible incumbent can still have a poor objective.
+
+Read the complete cost/comfort table before interpreting a lower bill. These results support a runnable, audited benchmark; stronger economic comparisons need longer-budget and formulation-sensitivity experiments. No result is presented as proof that MPC always wins.
 
 ## Terminal protocol correction
 
-The first full run completed all 84 controller experiments and passed replay and physical audits, but 20 runs did not reach the terminal recovery target after six hours. This is a protocol limitation, not a test failure to hide. The recovery duration is now 12 hours for every method, and a cold-start/severe-heat-loss regression was added. The single weather disturbance is also prevented from repeating in the next morning's recovery period.
+The [first full run](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/42794146594) completed, but a six-hour recovery left 20 of 84 runs short of the terminal temperature target. A new conservative cold-case regression then found a 0.1213 C deficit at 12 hours.
 
-The revised source requires a new complete Actions run. Results from the six-hour run must not be mixed with the revised protocol.
+The final protocol uses the same **16-hour recovery** for every controller and retains the 0.05 C final temperature tolerance. The single weather event does not repeat in the recovery period. All 28 scenarios were rerun after this change; all 84 final controller runs recovered. Operating-day controllers, objective penalties, and evaluation seeds were not tuned to favor a method. Results from different recovery protocols must not be mixed.
 
+The common continuation includes holding energy after restoration; full-run primary totals therefore cover 40 hours. Operation and recovery metrics are also supplied separately.
 
-The new conservative recovery regression also found a 0.1213 C deficit at 12 hours (28 other tests passed). The common duration is therefore 16 hours, retaining the 0.05 C target tolerance. This correction changes the terminal protocol for all controllers; it does not tune their operating-day behavior to favor a method.
+Documentation and archived result files may be committed after the tested source revision without rerunning the numerical code. The source revision and artifact digest in the provenance file identify the exact executed version.

@@ -50,7 +50,13 @@ Each output directory contains:
 
 Cost includes a common 16-hour recovery under the same rule controller. Final-state differences are still reported; a failed recovery target prevents a simple equivalent-service savings claim.
 
-GitHub Actions runs regression tests, the smoke suite, and the full suite on main. Download `smoke-results` or `full-results` from a successful [Actions run](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions). No local checkout or local execution was used to initialize this repository.
+GitHub Actions runs regression tests, the smoke suite, and the full suite on main. Download `smoke-results` or `full-results` from a successful [Actions run](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions).
+
+## Verified reference run
+
+The [reference run](reports/reference-2026-11-10/README.md) completed **29 tests, 12 smoke runs, and 84 full controller runs** on GitHub Actions. All full runs passed independent replay and actuator audits and reached the common recovery target.
+
+The 0.5-second full-CI solver budget was too short to certify any day-ahead plan within the requested optimality tolerance. Several returned plans had large comfort violations. The archived results show those limitations explicitly; controller economic rankings require a stronger solver-budget study.
 
 ## Read the method
 

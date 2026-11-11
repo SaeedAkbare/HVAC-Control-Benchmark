@@ -35,7 +35,7 @@ Nominal occupancy is 24 people from 08:00 up to, but not including, 18:00. The s
 | loss_mild | Actual UA is 1.20 times nominal; controller retains nominal UA |
 | loss_severe | Actual UA is 1.50 times nominal; controller retains nominal UA |
 
-The weather error ramps up between 08:00 and 10:00, stays at full amplitude until 16:00, and returns to zero by 18:00. It is one coherent multi-hour event. The initial weather forecast is the base seasonal profile and cannot foresee the event.
+The weather error ramps up between 08:00 and 10:00, stays at full amplitude until 16:00, and returns to zero by 18:00. It is one coherent multi-hour event. The initial weather forecast is the base seasonal profile and cannot foresee the event. The event applies only during operation and does not repeat during terminal recovery.
 
 These seven cases separate mechanisms. Combined simultaneous disturbances are not included in this initial benchmark. Mild and severe are experiment labels, not probabilities or calibrated weather/occupancy quantiles.
 
