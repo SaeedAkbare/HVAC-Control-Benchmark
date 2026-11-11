@@ -2,7 +2,23 @@
 
 All execution described here took place on GitHub Actions. The original local project was not used or modified.
 
-## Current verified version
+## Sensitivity validation — 11 November 2026
+
+- Tested source: [e7ccaae6e269694bd7a18683a2d115b7667b876a](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/commit/e7ccaae6e269694bd7a18683a2d115b7667b876a).
+- [Successful Actions run](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43041943285).
+- **39 regression tests passed** in 1.88 seconds; 14 upstream Matplotlib/Pyparsing deprecation warnings.
+- **12 existing benchmark smoke runs and three sensitivity smoke runs completed.**
+- **39 sensitivity study runs completed:** 18 nominal/budget/penalty, 12 matched-window feedback, and nine held-out runs.
+- All 39 passed independent replay and equipment audits and reached the common recovery target. Maximum replay discrepancies were 4.228e-13 C and 6.055e-8 ppm.
+- All 375 optimization calls returned validated incumbents: 194 within the requested tolerance and 181 accepted at the time limit. There were zero fallbacks or actuator overrides.
+- No nominal tuning candidate qualified across both periods. The continuation used the predeclared, explicitly unqualified diagnostic anchor; held-out outcomes did not change it.
+- [Permanent results, all metric rows, frozen settings and provenance](../reports/sensitivity-2026-11-11/README.md); [complete artifact](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43041943285/artifacts/13866317642) with per-call solver evidence, trajectories and figures.
+
+The new checks cover solver objective components and raw diagnostics, missing/invalid incumbents, independent peak/duration gates, practical-versus-solver-quality acceptance, nominal-only selection, frozen-file integrity, output preservation and explicit approval of oversized requested compute budgets. These supplement the original regression coverage below. Python and dependency versions are unchanged from the reference run.
+
+The study verifies the staged runner and its recorded evidence. It does not certify optimized economics: all nominal optimizer gaps remained far above 1%, and none of the held-out optimizer runs met the every-call quality gate. The matched summer occupancy window isolates the initial horizon and shows a useful causal response to new observations, while retaining unequal total computation. See the result report for cost, comfort and qualification limits.
+
+## Original reference run — 10 November 2026
 
 - Tested source: [322c2bcb1c45cdcfb76b3136fe75051b1e4f3595](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/commit/322c2bcb1c45cdcfb76b3136fe75051b1e4f3595).
 - [Successful Actions run](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/42804919624), executed 10 November 2026; results reviewed and recorded 11 November 2026.
@@ -16,7 +32,7 @@ All execution described here took place on GitHub Actions. The original local pr
 
 Regression coverage includes exact/independent ODE agreement, zero-flow behavior, supply and meter limits, threshold-crossing metrics, deterministic inputs, causal forecasts, invalid solver-output rejection, frozen open-loop scheduling, first-action MPC, nominal model isolation under plant mismatch, and severe cold recovery.
 
-## What the pass does and does not establish
+## What the reference pass does and does not establish
 
 The pass verifies package execution, accounting, physical consistency, and the stated tests. It is not field validation or a certificate of economically optimal control.
 

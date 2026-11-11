@@ -24,7 +24,7 @@ hvac-benchmark --suite full --output results-full
 hvac-benchmark --suite full --period winter --case weather_severe --output winter-check
 ```
 
-The full suite has four seasonal days, seven scenario cases, and three controllers: **84 controller runs**. MILP execution can take tens of minutes. The default horizon is six hours and the solver budget is two seconds per call. For example, `--time-limit 0.5 --horizon-hours 6` reproduces the full CI configuration. Short solver budgets can change the feasible schedules and fallback rate; they are recorded with the results.
+The full suite has four seasonal days, seven scenario cases, and three controllers: **84 controller runs**. MILP execution can take tens of minutes. The default horizon is six hours and the solver budget is two seconds per call. For example, `--time-limit 0.5 --horizon-hours 6` reproduces the original full-reference CI configuration. Short solver budgets can change the feasible schedules and fallback rate; they are recorded with the results.
 
 ## What is compared?
 
@@ -68,6 +68,8 @@ hvac-benchmark sensitivity --stage all --output reports/sensitivity-initial
 ```
 
 The default nominal stage runs winter and summer at 0.5, 2, 10 and 30 seconds per day-ahead solve, then changes one penalty weight at a time at a fixed budget. Later stages use a hashed settings file frozen before held-out evaluation. Acceptance checks distinguish equipment feasibility, practical comfort and solver quality; equal per-call time is not equal total computation.
+
+The [executed sensitivity report](reports/sensitivity-2026-11-11/README.md) records **39 passing tests, 12 benchmark smoke runs, three sensitivity smoke runs, and 39 study runs**. All study runs passed physical audits and recovered. Longer nominal budgets improved incumbent objectives, but no tuning candidate passed both practical and solver-quality gates. A matched four-hour occupancy case demonstrated a useful feedback response; the held-out full-day results do not establish a general economic ranking.
 
 ## Read the method
 

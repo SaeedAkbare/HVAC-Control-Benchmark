@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-11-11",
+  "repository": "SaeedAkbare/HVAC-Control-Benchmark",
+  "source_revision": "e7ccaae6e269694bd7a18683a2d115b7667b876a",
+  "source_url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/commit/e7ccaae6e269694bd7a18683a2d115b7667b876a",
+  "workflow_run": {
+    "id": 43041943285,
+    "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43041943285",
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "e7ccaae6e269694bd7a18683a2d115b7667b876a",
+    "created_at": "2026-11-11T14:47:51Z",
+    "last_updated_at": "2026-11-11T15:02:13Z"
+  },
+  "jobs": [
+    {
+      "id": 130595751861,
+      "name": "test",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43041943285/job/130595751861"
+    },
+    {
+      "id": 130596405831,
+      "name": "sensitivity",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43041943285/job/130596405831"
+    },
+    {
+      "id": 130596408241,
+      "name": "benchmark",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43041943285/job/130596408241"
+    }
+  ],
+  "commands": {
+    "tests": "python -m pytest -q",
+    "study": "hvac-benchmark sensitivity --stage all --output reports/sensitivity-run",
+    "benchmark_smoke": "hvac-benchmark --suite smoke --output results/reference-smoke --time-limit 1",
+    "sensitivity_smoke": "hvac-benchmark sensitivity --stage smoke --output results/sensitivity-smoke --no-plots"
+  },
+  "validation": {
+    "tests_passed": 39,
+    "test_warnings": 14,
+    "test_seconds": 1.88,
+    "warnings": "Upstream Matplotlib/Pyparsing deprecations",
+    "reference_smoke_runs": 12,
+    "sensitivity_smoke_runs": 3,
+    "study_runs": 39,
+    "stages": {
+      "baseline": 2,
+      "budget": 8,
+      "penalty": 8,
+      "feedback": 12,
+      "heldout": 9
+    },
+    "optimization_calls": 375,
+    "optimal_tolerance_calls": 194,
+    "accepted_time_limited_calls": 181,
+    "all_modeled_incumbents_valid": true,
+    "all_equipment_audits_passed": true,
+    "all_replay_audits_passed": true,
+    "all_recovery_targets_reached": true,
+    "fallback_calls": 0,
+    "actuator_overrides": 0,
+    "max_replay_temperature_error_c": 4.227729277772596e-13,
+    "max_replay_co2_error_ppm": 6.054710866010282e-8
+  },
+  "freeze": {
+    "qualification": "unqualified_diagnostic_anchor",
+    "id": "1618a9fcfaac4ede5dd47ab41a91dcc08e7fbed23e4f989faafc5c3dec24e6c3",
+    "emitted_at_utc": "2026-11-11T14:54:46.9750458Z",
+    "preceded_feedback_and_heldout": true,
+    "all_continuation_rows_match": true
+  },
+  "consistency": {
+    "unique_run_ids": 39,
+    "identical_input_hash_within_each_comparison": true,
+    "nominal_inputs_excluded_heldout_seeds": true
+  },
+  "timing": {
+    "actual_wall_seconds": 767.624619329,
+    "total_solver_seconds": 764.3987027420005,
+    "requested_solver_budget_sum_seconds": 1127
+  },
+  "artifacts": [
+    {
+      "id": 13866317642,
+      "name": "sensitivity-results",
+      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43041943285/artifacts/13866317642",
+      "size_in_bytes": 1245323,
+      "digest": "sha256:c92161d1a8f3dffbe9fd76a0453e9e8ca233ae44a8a55ee8af0de302066b86a2",
+      "created_at": "2026-11-11T15:02:09Z",
+      "expires_at": "2027-02-09T14:47:52Z"
+    },
+    {
+      "id": 13865293786,
+      "name": "smoke-results",
+      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43041943285/artifacts/13865293786",
+      "size_in_bytes": 636322,
+      "digest": "sha256:584d4ac48f042d56985240a2afbb5f18c9d887bd7bc36571bdba648b858b90f9",
+      "created_at": "2026-11-11T14:48:57Z",
+      "expires_at": "2027-02-09T14:47:52Z"
+    }
+  ],
+  "archive_method": {
+    "metrics_jsonl": "Exact SENSITIVITY_METRIC JSON payloads from the successful sensitivity job log, in execution order.",
+    "metrics_csv": "Reconstructed from the same JSON payloads; values preserved, formatting and boolean spelling may differ from artifact CSV.",
+    "manifest_json": "Exact SENSITIVITY_COMPLETE JSON payload from the job log.",
+    "frozen_settings_json": "Exact SENSITIVITY_FREEZE JSON payload; original floating-point lexical types preserved so the runner's freeze hash remains reusable.",
+    "readme": "Analysis of executed metrics with rounded display tables; no simulated or estimated performance substituted.",
+    "full_detail": "Per-call solves, traces, figures and original generated report are in the linked artifact, not permanently copied here."
+  },
+  "previous_reference": {
+    "directory": "reports/reference-2026-11-10",
+    "source_revision": "322c2bcb1c45cdcfb76b3136fe75051b1e4f3595",
+    "workflow_run_id": 42804919624,
+    "preserved": true
+  },
+  "scope": {
+    "execution": "GitHub Actions only",
+    "repository_edits": "GitHub connector only",
+    "original_local_project_touched": false,
+    "controller_objective_or_constraints_changed": false,
+    "repeats": 1
+  }
+}

@@ -1,6 +1,6 @@
 # Sensitivity study protocol
 
-This protocol is declared before its first sensitivity execution. The study diagnoses the initial short-budget results; it does not assume that timeouts alone caused poor control or that MPC should win.
+This protocol was declared before its first sensitivity execution. The study diagnoses the initial short-budget results; it does not assume that timeouts alone caused poor control or that MPC should win.
 
 One new module, [sensitivity.py](../src/hvac_benchmark/sensitivity.py), orchestrates the existing controllers, plant, evaluator, metrics and reporting. The controller formulation and the original reference CSV remain unchanged. Solver instrumentation adds diagnostics without changing the objective or constraints.
 
@@ -58,7 +58,7 @@ Temperature units are EUR/(K h); CO2 units are EUR/(1000 ppm h). Only one weight
 
 Raw objective numbers across different weights are not comparable. The study also records objective components and a common-weight endpoint score. Actual continuous comfort remains the evaluator's metric, not this endpoint score.
 
-If a gap-qualified solution still fails practical comfort, investigate the penalty tradeoff, endpoint-versus-continuous scoring and the feasible witness before attributing the result to insufficient time. If neither the optimizer nor the witness is practically acceptable, stronger-comfort feasibility is unresolved; a failure to find such a trajectory is not an infeasibility proof. The runner does not automatically raise a budget or penalty in response to an outcome.
+If a gap-qualified matched-model nominal solution still fails practical comfort, investigate the penalty tradeoff, endpoint-versus-continuous scoring and the feasible witness before attributing the result to insufficient time. In disturbed feedback or held-out cases, a good gap applies to the forecast model, not to unforeseen realized inputs; separately examine forecast and plant mismatch. If neither the optimizer nor the witness is practically acceptable, stronger-comfort feasibility is unresolved; a failure to find such a trajectory is not an infeasibility proof. The runner does not automatically raise a budget or penalty in response to an outcome.
 
 ### 3. Freeze the continuation settings
 
@@ -122,3 +122,7 @@ CI runs regression tests, both smoke entry points, and the bounded staged sensit
 - `report.md`: a table generated from executed results and explicit interpretation gates.
 
 Solve time includes model construction and any fallback rollout. Total daily solver time sums actual calls; overlapping MPC objectives are not summed into a fake daily objective. A timeout alone is neither a feasibility failure nor a causal explanation. Missing solver evidence remains missing rather than being filled with an invented bound or gap.
+
+## First executed study
+
+The [11 November 2026 archive](../reports/sensitivity-2026-11-11/README.md) preserves all 39 metric rows, the manifest, the frozen settings and provenance from the first complete execution. All physical audits and terminal recovery checks passed. No nominal candidate met all qualification gates, so the later cases used the declared unqualified diagnostic anchor. The report separates budget and penalty observations from the matched-window occupancy response and the more confounded full-day comparison. The original reference remains unchanged.
