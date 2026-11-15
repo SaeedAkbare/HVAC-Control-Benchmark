@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-11-15",
+  "repository": "SaeedAkbare/HVAC-Control-Benchmark",
+  "source_revision": "1150f15ee7211b57f0d24907268616854276c8a2",
+  "source_url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/commit/1150f15ee7211b57f0d24907268616854276c8a2",
+  "workflow": {
+    "id": 43710709106,
+    "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-15T11:48:39Z",
+    "updated_at": "2026-11-15T12:01:53Z"
+  },
+  "jobs": [
+    {
+      "id": 132801416369,
+      "name": "test",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106/job/132801416369"
+    },
+    {
+      "id": 132801642121,
+      "name": "corrected",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106/job/132801642121"
+    },
+    {
+      "id": 132801643626,
+      "name": "full",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106/job/132801643626"
+    }
+  ],
+  "commands": {
+    "tests": "python -m pytest -q",
+    "benchmark_smoke": "hvac-benchmark --suite smoke --output results/benchmark-smoke --time-limit 1",
+    "study_smoke": "hvac-benchmark sensitivity --stage smoke --output results/study-smoke --no-plots",
+    "study": "hvac-benchmark sensitivity --stage all --output reports/corrected-run"
+  },
+  "validation": {
+    "tests_passed": 46,
+    "test_seconds": 1.76,
+    "test_warnings": 14,
+    "warning_kind": "upstream Matplotlib/Pyparsing deprecations",
+    "benchmark_smoke_runs": 12,
+    "study_smoke_runs": 3,
+    "study_runs": 34,
+    "optimization_calls": 654,
+    "status_counts": {
+      "feasible_limit": 304,
+      "optimal_tolerance": 332,
+      "time_limit_no_incumbent": 4,
+      "proven_infeasible": 2,
+      "initial_state_infeasible": 12
+    },
+    "all_equipment_audits_passed": true,
+    "all_independent_replays_passed": true,
+    "all_terminal_targets_reached": true,
+    "valid_service_runs": 22,
+    "comparison_eligible_runs": 20,
+    "quality_screen_pass_runs": 10,
+    "fallback_calls": 18,
+    "fallback_operation_steps": 398,
+    "actuator_overrides": 0,
+    "max_replay_temperature_error_c": 8.171241461241152e-14,
+    "max_replay_co2_error_ppm": 3.620380084612407e-8,
+    "milp_solver_invocations": 642,
+    "initial_state_precheck_rejections": 12
+  },
+  "timing": {
+    "actual_wall_seconds": 715.652214887,
+    "total_solver_seconds": 710.2285650129991,
+    "requested_solver_budget_seconds": 1353
+  },
+  "protocol": {
+    "id": "a84bbef31c2d4ff5e8e1b61f52494642a7cb9fe14f74a6d6221bf6c1c530d0ef",
+    "declared_before_first_metric": true,
+    "all_rows_match": true,
+    "paired_input_hashes_match": true,
+    "repeats": 1,
+    "parameters_selected_from_results": false
+  },
+  "artifacts": [
+    {
+      "id": 14160459146,
+      "name": "corrected-results",
+      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106/artifacts/14160459146",
+      "digest": "sha256:b6b85f56ea046fd7494ac4df1dbab2ec39febeff436a51ff5e90b201db72c637",
+      "size_in_bytes": 1782508,
+      "created_at": "2026-11-15T12:01:50Z",
+      "expires_at": "2027-02-13T11:48:39Z"
+    },
+    {
+      "id": 14160188078,
+      "name": "smoke-results",
+      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106/artifacts/14160188078",
+      "digest": "sha256:33251867abac190620f80150c02ac17cbfbddb71ef5147f48e0fc114387a2b70",
+      "size_in_bytes": 625515,
+      "created_at": "2026-11-15T11:49:33Z",
+      "expires_at": "2027-02-13T11:48:39Z"
+    }
+  ],
+  "archive_method": {
+    "jsonl": "Exact HARD_METRIC and HARD_SOLVE payloads from the completed job log, in execution order.",
+    "csv": "Reconstructed from those payloads; values preserved, text/boolean formatting may differ from original CSV.",
+    "protocol_and_manifest": "Exact HARD_PROTOCOL and HARD_COMPLETE payloads.",
+    "figures": "Exact SVG text and PNG bytes emitted by the executed Matplotlib code as HARD_FIGURE payloads.",
+    "readme": "Analysis and rounded tables from executed evidence; no invented performance values.",
+    "full_traces": "Remain in the linked Actions artifact."
+  },
+  "scope": {
+    "objective": "energy cost only",
+    "comfort_constraints": "hard, both interval endpoints",
+    "comfort_slacks": false,
+    "penalty_sweeps": false,
+    "physics_and_scenario_source_unchanged": true,
+    "limits_horizons_terminal_protocol_unchanged": true,
+    "execution": "GitHub Actions only",
+    "local_project_touched": false,
+    "optional_84_run_matrix_executed": false
+  },
+  "historical_evidence": {
+    "soft_constraint_archives": [
+      "reports/reference-2026-11-10",
+      "reports/sensitivity-2026-11-11"
+    ],
+    "status": "superseded; raw metrics/settings/provenance preserved; README banners added"
+  }
+}

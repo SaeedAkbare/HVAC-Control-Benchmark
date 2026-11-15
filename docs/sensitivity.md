@@ -48,3 +48,7 @@ The optional 84-run seasonal matrix is separate and requires manual workflow dis
 - `report.md`: all completed runs with validity gates; it does not hide failed service behind an energy score.
 
 The current model is a physically plausible synthetic benchmark with no measured-data or deployment claim. Earlier reports under `reference-2026-11-10` and `sensitivity-2026-11-11` are superseded soft-constraint evidence.
+
+## Executed initial correction
+
+The [15 November corrected archive](../reports/corrected-2026-11-15/README.md) records all 34 runs and 654 optimization attempts (642 HiGHS calls and 12 initial-state prechecks). The fixed protocol was preserved. Both ten-second nominal plans were hard-feasible, but short-budget timeouts, disturbed-service failures and large remaining gaps were retained. The optional 84-run matrix was not executed. No penalty study is active.
