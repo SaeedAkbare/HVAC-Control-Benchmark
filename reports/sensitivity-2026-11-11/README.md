@@ -1,3 +1,5 @@
+> **Superseded formulation:** this archive used soft comfort constraints and penalty costs. It does not represent the corrected cost-only problem with hard comfort constraints. The original records are preserved for provenance; do not use them as current performance evidence. See [the corrected method](../../docs/method.md).
+
 # Sensitivity results — 11 November 2026
 
 The bounded study completed, but **no nominal tuning candidate passed every predeclared gate**. Increasing the day-ahead budget from 0.5 to 30 seconds greatly improved the returned objectives; it did not produce a 1%-gap certificate. A matched-window occupancy example shows a useful feedback response, while the full-day held-out results remain unsuitable for a general economic ranking.

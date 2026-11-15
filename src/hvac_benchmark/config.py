@@ -46,8 +46,6 @@ class Settings:
     horizon_steps: int = 24
     time_limit: float = 2.0  # seconds per MILP
     mip_gap: float = 0.01
-    temperature_penalty: float = 100.0  # EUR/(K h), soft objective only
-    co2_penalty: float = 100.0  # EUR/(1000 ppm h), soft objective only
     recovery_steps: int = 64  # common sixteen-hour continuation
 
 

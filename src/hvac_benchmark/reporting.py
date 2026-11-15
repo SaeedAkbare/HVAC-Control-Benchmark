@@ -6,6 +6,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
+plt.rcParams["svg.fonttype"] = "none"
+
 COLORS = {"thermostat": "#555555", "open_loop": "#d08020", "mpc": "#147d92"}
 
 
@@ -23,11 +25,13 @@ def markdown_report(metrics, suite_name):
     lines = [
         "# Simulation results", "",
         f"Suite: **{suite_name}**. All values are simulated, using surrogate inputs.",
+        "Single objective: energy cost, with hard temperature, CO2 and equipment constraints.",
+        "An infeasible or failed solve uses an explicitly labelled emergency rule, never relaxed constraints.",
         "Cost and meter energy include the common sixteen-hour recovery. Comfort columns",
         "cover the operation period. Read each cost alongside both comfort measures,",
         "solver fallbacks, and terminal recovery success. No field savings are implied.", "",
-        "| Scenario | Controller | Cost (EUR) | Electricity (kWh) | Gas (kWh) | Temperature (K h) | CO2 (ppm h) | Fallbacks | Recovery reached |",
-        "|---|---|---:|---:|---:|---:|---:|---:|---|",
+        "| Scenario | Controller | Cost (EUR) | Electricity (kWh) | Gas (kWh) | Temperature (K h) | CO2 (ppm h) | Fallbacks | Recovery reached | Valid service | Eligible |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---|---|---|",
     ]
     for m in metrics:
         lines.append(
@@ -35,7 +39,7 @@ def markdown_report(metrics, suite_name):
             f"{m['total_electricity_kwh']:.3f} | {m['total_gas_kwh']:.3f} | "
             f"{m['operation_temperature_degree_hours']:.4f} | "
             f"{m['operation_co2_ppm_hours']:.2f} | {m['fallback_calls']} | "
-            f"{m['recovery_reached_target']} |"
+            f"{m['recovery_reached_target']} | {m['valid_service']} | {m['comparison_eligible']} |"
         )
     lines.extend(["", "Detailed violation durations, peaks, solve timing, incumbent gaps,",
                   "actuator overrides and independent replay errors are in metrics.csv.",
@@ -71,6 +75,7 @@ def plot_trajectories(scenario_name, records, output):
     axes[2].set(ylabel="Electric power (kW)", xlabel="Elapsed time (hours)")
     axes[0].legend(ncol=3)
     fig.savefig(Path(output) / f"{scenario_name}.png", dpi=150)
+    fig.savefig(Path(output) / f"{scenario_name}.svg")
     plt.close(fig)
 
 
@@ -80,7 +85,8 @@ def plot_comparison(metrics, output):
     measures = (("operation_temperature_degree_hours", "Change in temperature violation (K h)"),
                 ("operation_co2_ppm_hours", "Change in CO2 violation (ppm h)"))
     for name in ("open_loop", "mpc"):
-        selected = [m for m in metrics if m["controller"] == name]
+        selected = [m for m in metrics if m["controller"] == name
+                    and m["comparison_eligible"] and baseline[m["scenario"]]["comparison_eligible"]]
         changes = [100 * (m["total_cost_eur"] / baseline[m["scenario"]]["total_cost_eur"] - 1)
                    for m in selected]
         for ax, (measure, label) in zip(axes, measures):
@@ -92,6 +98,29 @@ def plot_comparison(metrics, output):
         ax.axvline(0, color="black", linewidth=0.7)
         ax.grid(alpha=0.2)
         ax.legend()
-    fig.suptitle("Paired scenarios: cost includes recovery; comfort covers operation")
+    fig.suptitle("Eligible pairs only: cost includes common recovery; see CSV for all failures")
     fig.savefig(Path(output) / "paired_comparison.png", dpi=150)
+    plt.close(fig)
+
+
+def plot_solver_budget(rows, output):
+    """Executed nominal cost objectives and bounds; missing incumbents are gaps."""
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.5), constrained_layout=True)
+    for ax, period in zip(axes, ("winter", "summer")):
+        selected = sorted((r for r in rows if r["stage"] == "budget" and r["period"] == period
+                           and r["repeat"] == 0), key=lambda r: r["budget_s"])
+        x = [r["budget_s"] for r in selected]
+        objective = [r["first_incumbent_objective"] if r["all_predictions_hard_feasible"]
+                     else np.nan for r in selected]
+        bound = [r["first_dual_bound"] if r["first_dual_bound"] is not None else np.nan
+                 for r in selected]
+        ax.plot(x, objective, "o-", label="Valid incumbent cost", color=COLORS["open_loop"])
+        ax.plot(x, bound, "s--", label="Solver lower bound", color="#147d92")
+        ax.set(xscale="log", xlabel="Time limit per solve (s)", ylabel="Operating objective (EUR)",
+               title=period + " | 24-hour hard-constraint plan")
+        ax.grid(alpha=0.2)
+        ax.legend()
+    fig.suptitle("One synthetic repeat; objective excludes common recovery")
+    fig.savefig(Path(output) / "solver_budget.png", dpi=150)
+    fig.savefig(Path(output) / "solver_budget.svg")
     plt.close(fig)

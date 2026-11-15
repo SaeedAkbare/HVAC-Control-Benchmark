@@ -77,15 +77,21 @@ The methods intentionally have different lookahead policies: a full day initiall
 
 ## MILP and infeasibility
 
-Each interval chooses exactly one airflow mode using binary variables. The exact thermal and CO2 transitions for that mode are enforced by indicator inequalities. Relaxation constants are calculated from finite variable bounds, rather than a single arbitrary huge number. Temperature is bounded to -40..65 C and CO2 to 0..30000 ppm as a numerical model domain. These broad bounds are not comfort criteria.
+The optimization has one objective: **minimize the predicted operating energy bill, subject to hard temperature, CO2 and equipment constraints**. There are no comfort slacks or penalty costs. The original temperature bands, CO2 ceilings, equipment capacities and meter accounting are unchanged.
 
-Heating and cooling are continuous, have capacity limits, and cannot run simultaneously. Fan-off forces both to zero. Supply-temperature bounds are hard constraints. CO2 is scaled to thousands of ppm inside the optimization.
+Each interval chooses exactly one of the six modes. For each mode, disaggregated start/end temperature and CO2 variables are bounded by valid comfort bounds times the mode binary. Their sums are the common state at each boundary. Mode dynamics use the exact exponential coefficients directly; inactive components and coil powers are zero. This replaces big-M dynamic equalities with an equivalent finite-mode formulation. CO2 is scaled to thousands of ppm.
 
-The objective is the predicted operating energy bill plus soft-comfort penalties: 100 EUR/(K h) for temperature below/above the band and 100 EUR/(1000 ppm h) for excess CO2. Penalties are numerical priorities, not social or health valuations. They are not a lexicographic guarantee of minimum violations. The MILP penalizes endpoint violations; evaluation integrates actual violations over the whole interval.
+At an occupancy change, a boundary state must satisfy the comfort requirements of both adjoining intervals. Both start and end constraints are hard. Held-input first-order trajectories are monotone, so this also covers the interval interior. The initial observation is fixed without clipping. A state already outside the current comfort bounds makes this hard problem infeasible; it is reported, not forgiven. The pre-existing numerical reporting tolerances remain 1e-5 C and 0.01 ppm.
 
-SciPy calls HiGHS with a 1% relative MIP gap and a configurable time limit. Status, solve time, and reported gap are recorded. Recorded solve time includes Python model construction, the solver, and any fallback rollout; it can exceed the solver's own budget. A thermostat's zero solve-call count means it uses no MILP, not that its control code takes zero CPU time. A finite incumbent from a time-limited solve is accepted only after explicit row, variable-bound, and integrality checks. An accepted incumbent is labeled `feasible_limit`, not optimal. No incumbent, invalid constraints, or a solver error causes an explicit fallback. A reported optimum is only within the requested solver tolerance.
+Heating and cooling have mode-specific continuous powers bounded by equipment capacity and the selected mode. A separate binary prohibits simultaneous heating and cooling. Fan-off forces both powers to zero. Supply constraints apply to both mode-state endpoints. A small exhaustive independent LP test checks the disaggregated MILP against all mode/sign sequences over two steps.
 
-Fallback counts are **solve events**. One open-loop fallback can affect an entire day; one MPC fallback affects one action. Compare these counts with the number of solve calls and the trace, not as equal-duration events.
+SciPy/HiGHS receives a 1% relative gap and a configurable time limit. An incumbent must pass row, bound, integrality, exact prediction replay, comfort and actuator checks; the recomputed meter cost must equal the solver objective. Only then is it accepted as `optimal_tolerance` or `feasible_limit`. A time-limited valid solution is feasible, not certified optimal beyond its reported gap.
+
+Failures retain their cause: `initial_state_infeasible` is an analytic fixed-state contradiction; `proven_infeasible` is solver status 2; `time_limit_no_incumbent` is not an infeasibility proof. Unbounded, solver exceptions/failures, invalid incumbents and invalid predictions are separately labelled. The diagnostic `one_step_endpoint_reachable` analytically checks whether any mode and allowed coil output can reach the first interval's endpoint comfort; it never excuses an invalid interval start.
+
+An emergency thermostat rollout may keep the simulation running after failure. It is not a valid optimization, never changes the hard problem, and carries no hard-comfort guarantee. Open-loop fallback remains frozen; MPC fallback applies the first rule action and tries again at the next observation. Both failed solve counts and affected operation steps are recorded.
+
+A valid forecast plan can violate realized comfort under unexpected weather/occupancy or plant mismatch. Traces separate predicted feasibility, observed-start violations, realized interval comfort, fallback activity and actuator overrides. Cost comparisons require valid realized service and the common terminal target; a low bill with violated service is not an equivalent-service saving.
 
 ## Shared actuator protection
 
@@ -111,4 +117,4 @@ A successful replay checks internal consistency, not the accuracy of the buildin
 
 ## Deferred work
 
-Measured weather/tariff ingestion with license provenance, noisy sensors, occupancy estimation, forecast ensembles, systematic horizon/penalty/solver-budget sensitivity, tighter MILP relaxations, and a richer independent building model would strengthen external validity. None is represented as implemented here.
+Measured weather/tariff ingestion with license provenance, noisy sensors, occupancy estimation, forecast ensembles, larger repeated horizon/solver-budget studies, and a richer independent building model would strengthen external validity. None is represented as implemented here.

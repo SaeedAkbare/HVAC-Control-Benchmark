@@ -1,3 +1,5 @@
+> **Formulation correction (15 November 2026):** the historical validations below apply to the superseded soft-constraint model. Corrected hard-constraint results will be recorded separately after execution. These old test/run counts do not validate the current model.
+
 # Validation record
 
 All execution described here took place on GitHub Actions. The original local project was not used or modified.

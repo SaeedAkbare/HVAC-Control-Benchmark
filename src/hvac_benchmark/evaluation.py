@@ -4,7 +4,7 @@ from math import exp, expm1, log
 import numpy as np
 from scipy.integrate import solve_ivp
 from .config import Action, INITIAL, Model, MODES, Settings, State, comfort
-from .controllers import CONTROLLERS, thermostat
+from .controllers import CONTROLLERS, comfort_ok, thermostat
 from .physics import energy, limit_action, step
 from .scenarios import Scenario, forecast
 
@@ -98,7 +98,7 @@ def evaluate(scenario: Scenario, controller_name: str, settings: Settings):
     for k in range(count):
         observed = scenario.realized[k]
         recovery = k >= n
-        solve = None
+        solve, active_plan, predicted_next = None, None, None
         if recovery:
             requested = thermostat(state, observed, nominal, settings.dt, recovery=True)
             status = "common_recovery"
@@ -110,8 +110,11 @@ def evaluate(scenario: Scenario, controller_name: str, settings: Settings):
                               scenario.start_hour, settings.dt)
             decision = controller.act(k, state, future, nominal, settings)
             requested, solve = decision.action, decision.solve
+            active_plan = decision.active_plan
+            predicted_next = active_plan.predicted[decision.plan_index] if active_plan else None
             status = solve.status if solve else (
-                "frozen_schedule" if controller_name == "open_loop" else "rule")
+                ("frozen_fallback" if active_plan and active_plan.fallback else "frozen_schedule")
+                if controller_name == "open_loop" else "rule")
             if solve:
                 solves.append(solve)
         action, changed = limit_action(state, requested, observed,
@@ -145,14 +148,21 @@ def evaluate(scenario: Scenario, controller_name: str, settings: Settings):
             "solve_fallback": solve.fallback if solve else None,
             "solve_forecast_steps": len(solve.actions) if solve else None,
             "solve_objective": solve.objective if solve else None,
+            "fallback_active": bool(active_plan and active_plan.fallback),
+            "active_prediction_hard_feasible": (
+                (active_plan.diagnostics or {}).get("prediction_hard_feasible", False)
+                if active_plan else None),
+            "observed_start_comfort_satisfied": comfort_ok(state, observed) if not recovery else None,
+            "realized_interval_comfort_satisfied": (
+                comfort_ok(state, observed) and comfort_ok(next_state, observed)
+                if not recovery else None),
             **{f"solver_{key}": diagnostic.get(key) for key in (
                 "raw_status", "message", "incumbent_valid", "incumbent_objective",
                 "dual_bound", "gap", "node_count", "energy_objective",
-                "temperature_penalty_objective", "co2_penalty_objective")},
-
-
-            "predicted_next_temperature_c": solve.predicted[0].temperature if solve else None,
-            "predicted_next_co2_ppm": solve.predicted[0].co2 if solve else None,
+                "prediction_hard_feasible", "initial_comfort_satisfied",
+                "one_step_endpoint_reachable")},
+            "predicted_next_temperature_c": predicted_next.temperature if predicted_next else None,
+            "predicted_next_co2_ppm": predicted_next.co2 if predicted_next else None,
         })
         actions.append(action)
         state = next_state
@@ -176,6 +186,19 @@ def evaluate(scenario: Scenario, controller_name: str, settings: Settings):
         "solve_seconds_mean": float(np.mean([s.seconds for s in solves])) if solves else 0.0,
         "solve_seconds_p95": float(np.percentile([s.seconds for s in solves], 95)) if solves else 0.0,
         "fallback_calls": sum(s.fallback for s in solves),
+        "fallback_operation_steps": sum(r["fallback_active"] for r in rows[:n]),
+        "proven_infeasible_calls": sum(s.status == "proven_infeasible" for s in solves),
+        "initial_state_infeasible_calls": sum(s.status == "initial_state_infeasible" for s in solves),
+        "time_limit_no_incumbent_calls": sum(s.status == "time_limit_no_incumbent" for s in solves),
+        "solver_failure_calls": sum(s.status.startswith(("solver_", "invalid_"))
+                                    or s.status == "unbounded" for s in solves),
+        "first_interval_endpoint_unreachable_calls": sum(
+            (s.diagnostics or {}).get("one_step_endpoint_reachable") is False for s in solves),
+        "all_predictions_hard_feasible": (all(
+            not s.fallback and (s.diagnostics or {}).get("prediction_hard_feasible") is True
+            for s in solves) if solves else None),
+        "observed_start_violation_steps": sum(
+            r["observed_start_comfort_satisfied"] is False for r in rows[:n]),
         "feasible_limit_calls": sum(s.status == "feasible_limit" for s in solves),
         "optimal_tolerance_calls": sum(s.status == "optimal_tolerance" for s in solves),
         "max_reported_mip_gap": max((s.gap for s in solves if s.gap is not None), default=None),
@@ -220,4 +243,15 @@ def evaluate(scenario: Scenario, controller_name: str, settings: Settings):
     metrics["recovery_reached_target"] = (
         metrics["terminal_temperature_error_c"] <= 0.05
         and metrics["terminal_co2_excess_ppm"] <= 1.0)
+    metrics["operation_hard_comfort_satisfied"] = (
+        metrics["operation_temperature_max_violation_c"] == 0
+        and metrics["operation_co2_max_violation_ppm"] == 0)
+    # Zero physical excursions after the unchanged numerical reporting
+    # tolerance. Recovery is a separate common continuation.
+    metrics["valid_service"] = (metrics["operation_hard_comfort_satisfied"]
+                                and metrics["recovery_reached_target"])
+    metrics["comparison_eligible"] = (
+        metrics["valid_service"] and metrics["fallback_operation_steps"] == 0
+        and metrics["actuator_overrides"] == 0
+        and (controller_name == "thermostat" or metrics["all_predictions_hard_feasible"]))
     return metrics, rows

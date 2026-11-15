@@ -53,7 +53,7 @@ The nominal case is an explicit matched-model reference. There is no separate pe
 
 ## Evaluation versus development
 
-The full evaluation matrix is fixed: four periods times seven cases times three controllers. There is no train/test fitting or learned parameter. Penalties, forecast-update constants, and baseline rules are fixed engineering choices, not selected to make MPC win.
+The full evaluation matrix is fixed: four periods times seven cases times three controllers. There is no train/test fitting or learned parameter. Forecast-update constants and baseline rules are fixed engineering choices, not selected to make MPC win. The current optimizer has hard comfort constraints and no penalty weights.
 
 A development period with seed 11 is defined but excluded from both evaluation suites, reserving a separate input for future tuning. It is not evidence that a tuning study has been performed. If parameters are tuned later, use that development data and preserve the four evaluation seeds.
 
@@ -65,10 +65,12 @@ The smoke suite uses only winter/summer and nominal/severe occupancy over 06:00-
 
 Use the exact same configuration for a paired comparison. Read cost together with temperature/CO2 violation area, duration, and peak, plus terminal recovery and solver fallback use. The plots show scenario-paired changes relative to the thermostat. They do not imply that pooling four constructed days estimates a population average or a statistical confidence interval.
 
-To reproduce the CI full benchmark:
+To run the optional full corrected matrix (the bounded CI study is documented separately):
 
 ```bash
-hvac-benchmark --suite full --time-limit 0.5 --horizon-hours 6 --output results
+hvac-benchmark --suite full --time-limit 2 --horizon-hours 6 --output results
 ```
 
 To examine sensitivity, write each setting to a separate directory and compare its metadata. A longer time limit or horizon is a new experiment and should be labeled as such.
+
+The corrected bounded study reuses fixed winter/summer seeds for a transparent formulation correction, not as a claim of unseen statistical validation. Its protocol is written before input generation. Earlier soft-constraint archives are superseded and are not current performance evidence.

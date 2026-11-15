@@ -40,6 +40,10 @@ def main(argv=None):
                  and (args.case is None or s.case == args.case)]
     if not scenarios:
         parser.error("filters selected no scenarios")
+    if args.output.exists() and any(args.output.iterdir()):
+        parser.error("output must be empty; preserve prior evidence")
+    if not __debug__:
+        parser.error("run without -O so physical assertions remain enabled")
     args.output.mkdir(parents=True, exist_ok=True)
     traces = args.output / "traces"
     figures = args.output / "figures"
@@ -60,7 +64,7 @@ def main(argv=None):
     write_csv(args.output / "metrics.csv", metrics)
     metadata = {
         "package_version": __version__, "git_commit": os.environ.get("GITHUB_SHA", "not recorded"),
-        "suite": args.suite, "python": sys.version, "platform": platform.platform(),
+        "formulation": "cost-only hard-constraints-v2", "suite": args.suite, "python": sys.version, "platform": platform.platform(),
         "versions": {name: version(name) for name in ("numpy", "scipy", "matplotlib")},
         "settings": asdict(settings), "nominal_model": asdict(Model()),
         "modes": [asdict(mode) for mode in MODES],

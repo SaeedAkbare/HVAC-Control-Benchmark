@@ -1,3 +1,5 @@
+> **Superseded formulation:** this archive used soft comfort constraints and penalty costs. It does not represent the corrected cost-only problem with hard comfort constraints. The original records are preserved for provenance; do not use them as current performance evidence. See [the corrected method](../../docs/method.md).
+
 # Reference run — 10 November 2026
 
 These are executed simulation results, using surrogate inputs. This is a **short-budget reference run**, not a certified ranking of the controllers.
