@@ -74,8 +74,8 @@ def report(rows):
 def run_study(output, stage="nominal", budgets=BUDGETS, mpc_budget=2.0,
               feedback_budget=2.0, repeats=1, plots=True):
     output = Path(output)
-    if output.exists() and any(output.iterdir()):
-        raise ValueError("output must be empty; previous evidence is never overwritten")
+    if output.exists() and (not output.is_dir() or any(output.iterdir())):
+        raise ValueError("output must be an empty directory; previous evidence is never overwritten")
     output.mkdir(parents=True, exist_ok=True)
     (output / "traces").mkdir()
     if plots:

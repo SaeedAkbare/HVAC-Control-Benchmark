@@ -1,9 +1,8 @@
 """Closed-loop experiment, independent numerical replay and physical metrics."""
-from dataclasses import asdict
 from math import exp, expm1, log
 import numpy as np
 from scipy.integrate import solve_ivp
-from .config import Action, INITIAL, Model, MODES, Settings, State, comfort
+from .config import INITIAL, Model, MODES, Settings, State, comfort
 from .controllers import CONTROLLERS, comfort_ok, thermostat
 from .physics import energy, limit_action, step
 from .scenarios import Scenario, forecast

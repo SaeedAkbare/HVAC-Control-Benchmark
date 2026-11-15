@@ -2,6 +2,7 @@
 import argparse
 from dataclasses import asdict
 from importlib.metadata import version
+from math import isfinite
 import json
 import os
 from pathlib import Path
@@ -29,8 +30,10 @@ def main(argv=None):
     parser.add_argument("--case", help="optional exact scenario case")
     parser.add_argument("--no-plots", action="store_true")
     args = parser.parse_args(argv)
-    if args.time_limit <= 0:
-        parser.error("--time-limit must be positive")
+    if not isfinite(args.time_limit) or args.time_limit <= 0:
+        parser.error("--time-limit must be finite and positive")
+    if not isfinite(args.horizon_hours) or not 0.25 <= args.horizon_hours <= 24:
+        parser.error("--horizon-hours must be finite and in [0.25, 24]")
     steps = round(args.horizon_hours / 0.25)
     if not 1 <= steps <= 96 or abs(steps * 0.25 - args.horizon_hours) > 1e-8:
         parser.error("--horizon-hours must be a multiple of 0.25 in [0.25, 24]")
@@ -40,8 +43,8 @@ def main(argv=None):
                  and (args.case is None or s.case == args.case)]
     if not scenarios:
         parser.error("filters selected no scenarios")
-    if args.output.exists() and any(args.output.iterdir()):
-        parser.error("output must be empty; preserve prior evidence")
+    if args.output.exists() and (not args.output.is_dir() or any(args.output.iterdir())):
+        parser.error("--output must be an empty directory; preserve prior evidence")
     if not __debug__:
         parser.error("run without -O so physical assertions remain enabled")
     args.output.mkdir(parents=True, exist_ok=True)

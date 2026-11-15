@@ -1,6 +1,6 @@
 # Corrected hard-constraint study protocol
 
-Protocol `hard-constraints-v2` is declared before the corrected study is executed. The previous penalty-sweep protocol and results are preserved in Git history and the superseded archives. They do not describe the current optimization.
+Protocol `hard-constraints-v2` was declared before the corrected study was executed. The previous penalty-sweep protocol and results are preserved in Git history and the superseded archives. They do not describe the current optimization.
 
 ## Problem and interpretation
 
@@ -36,7 +36,7 @@ hvac-benchmark sensitivity --stage all --output results/corrected-all
 
 The sums exclude construction, replay and plotting overhead. CI allows 30 minutes for the corrected study. Larger budget/repeat settings require `--allow-large` if the requested sum exceeds 1800 seconds. No automatic budget expansion occurs. Output directories must be empty.
 
-The optional 84-run seasonal matrix is separate and requires manual workflow dispatch (`study: full`). Old soft-constraint experiments are reproduced only from their historical source revisions, not by the current workflow.
+Normal CI runs tests, package checks and both smoke entry points. The 34-run corrected study requires manual workflow dispatch (`study: corrected`); the separate 84-run seasonal matrix uses `study: full`. Old soft-constraint experiments are reproduced only from their historical source revisions, not by the current workflow.
 
 ## Evidence
 

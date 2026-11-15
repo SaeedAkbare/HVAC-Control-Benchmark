@@ -1,6 +1,6 @@
 # LinkedIn draft
 
-Draft only; not published or sent to LinkedIn. Findings refer only to the corrected source and executed study.
+Draft only; not published or sent to LinkedIn. Before posting, replace MAIN_REPOSITORY_URL with the final repository URL on the intended account. Findings refer only to the corrected source and executed study.
 
 I’ve published an AI-assisted HVAC control benchmark comparing a thermostat, a frozen day-ahead schedule and model predictive control.
 
@@ -12,11 +12,11 @@ The corrected study includes 46 passing tests and 34 simulation runs, with solve
 
 All weather, occupancy and prices are synthetic. These are simulation findings, with no field-savings claim.
 
-Repository: https://github.com/SaeedAkbare/HVAC-Control-Benchmark
+Repository: MAIN_REPOSITORY_URL
 
 #ModelPredictiveControl #Optimization #HVAC
 
-Suggested image: [executed summer occupancy comparison](https://raw.githubusercontent.com/SaeedAkbare/HVAC-Control-Benchmark/main/reports/corrected-2026-11-15/figures/full_summer__occupancy_severe_r0.png).
+Suggested image: [executed summer occupancy comparison](../reports/corrected-2026-11-15/figures/full_summer__occupancy_severe_r0.png).
 
 Image caption: “Synthetic summer occupancy disturbance. Temperature, CO2 and electrical power for three controllers; shaded region is common recovery. The frozen plan violates realized comfort despite being feasible for its original forecast.”
 

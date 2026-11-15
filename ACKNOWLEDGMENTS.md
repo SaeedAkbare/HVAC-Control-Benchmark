@@ -1,6 +1,6 @@
 # Attribution and assistance
 
-This repository is an AI-assisted educational implementation. Codex assisted with design, code, tests, documentation, and remote repository setup. The maintainer is responsible for reviewing the assumptions and any claims. The project does not establish a history of building deployment, measured savings, or independently authored prior professional work.
+This is an AI-assisted educational simulation. Codex assisted with design, implementation, tests and documentation. The maintainer reviews the assumptions, code and reported claims. Results and limitations are documented in the [validation record](docs/validation.md).
 
 The thermal and CO2 equations are explicit first-principles well-mixed energy and mass balances, derived and explained in [the method](docs/method.md). No proprietary building data, company material, or field measurements are included. The source was written for this repository rather than copied from a third-party building simulator.
 

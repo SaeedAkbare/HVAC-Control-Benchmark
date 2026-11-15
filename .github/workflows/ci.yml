@@ -7,10 +7,10 @@ on:
   workflow_dispatch:
     inputs:
       study:
-        description: "Bounded corrected study, tests only, or full 84-run matrix"
+        description: "Validation only, corrected 34-run study, or full 84-run matrix"
         type: choice
         options: [corrected, tests, full]
-        default: corrected
+        default: tests
 permissions:
   contents: read
 concurrency:
@@ -28,6 +28,20 @@ jobs:
           cache: pip
       - run: python -m pip install -r requirements.txt
       - run: python -m pip install --no-deps -e .
+      - name: Check dependencies and build distribution
+        run: |
+          python -m pip check
+          python -m pip wheel --no-deps --wheel-dir dist .
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          with ZipFile(next(Path("dist").glob("*.whl"))) as wheel:
+              names = wheel.namelist()
+              assert any(n.endswith(".dist-info/licenses/LICENSE") for n in names)
+              metadata = wheel.read(next(n for n in names if n.endswith(".dist-info/METADATA"))).decode()
+              assert "\nLicense-Expression: MIT\n" in metadata
+          print("Wheel includes MIT license and package metadata.")
+          PY
       - run: python -m pytest -q
       - name: Benchmark integration smoke
         run: hvac-benchmark --suite smoke --output results/benchmark-smoke --time-limit 1
@@ -37,11 +51,13 @@ jobs:
         if: always()
         with:
           name: smoke-results
-          path: results/
+          path: |
+            results/
+            dist/
           if-no-files-found: ignore
   corrected:
     needs: test
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.study == 'corrected')
+    if: github.event_name == 'workflow_dispatch' && inputs.study == 'corrected'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
