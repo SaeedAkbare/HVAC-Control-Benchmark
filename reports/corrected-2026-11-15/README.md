@@ -6,8 +6,8 @@ This initial corrected study completed successfully, including cases where optim
 
 ## Verified execution
 
-- Tested source: [1150f15](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/commit/1150f15ee7211b57f0d24907268616854276c8a2).
-- [Successful Actions run 43710709106](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106), executed 15 November 2026.
+- Tested source: `1150f15ee7211b57f0d24907268616854276c8a2`.
+- Successful Actions run `43710709106`, executed 15 November 2026.
 - **46 regression tests passed** in 1.76 seconds, with 14 upstream Matplotlib/Pyparsing deprecation warnings.
 - **12 benchmark smoke runs and three corrected-study smoke runs completed.**
 - **34 corrected study runs completed:** 18 full-day comparisons, four additional budget cases and 12 matched-window cases.
@@ -24,7 +24,7 @@ The tests include an independent two-step exhaustive enumeration of all mode and
 
 [protocol.json](protocol.json), [manifest.json](manifest.json) and [provenance.json](provenance.json) record the exact source, settings, versions, input definitions and artifact digest. Every row carries protocol ID `a84bbef31c2d4ff5e8e1b61f52494642a7cb9fe14f74a6d6221bf6c1c530d0ef`. The protocol was emitted before the first metric; all paired controllers and nominal budget runs share the same input hashes. No outcome changed the settings or inputs.
 
-The [complete artifact](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106/artifacts/14160459146) also contains all executed trajectories and remaining plots. Its recorded expiration is 13 February 2027. The metrics, per-call records, settings and three selected PNG/SVG figures are permanently checked into this archive.
+The complete artifact (artifact `14160459146`, run `43710709106`) also contains all executed trajectories and remaining plots. Its recorded expiration is 13 February 2027. The metrics, per-call records, settings and three selected PNG/SVG figures are permanently checked into this archive.
 
 ## What the constraints and gates mean
 
@@ -170,3 +170,7 @@ This is a limited demonstration of responding to newly observed occupancy. The i
 One repeat, two synthetic seasonal days and selected single disturbances do not establish field savings, robustness, stability or statistical generality. The low-order plant has perfect observations, known prices and no solar gains, humidity, equipment delays or multizone effects. Hard forecast constraints are not robust constraints on unknown future reality.
 
 The synthetic inputs, capacities, thresholds, horizons and terminal goals were retained through the correction. Failures were not repaired by relaxing them or tuning scenarios. Larger repeated studies, measured inputs with appropriate provenance, improved forecasts/model estimation and additional equivalent solver formulations remain unexecuted.
+
+## Privacy note
+
+Personal repository URLs were removed on 16 November 2026. Scientific values, source-revision hashes and numeric run/artifact identifiers remain unchanged. These identifiers can still lead to original hosting metadata; see [privacy scope and remaining work](../../docs/privacy.md).

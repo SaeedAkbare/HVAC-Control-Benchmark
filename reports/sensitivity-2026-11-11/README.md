@@ -8,8 +8,8 @@ This report describes one executed repeat on synthetic inputs. It preserves the 
 
 ## Execution and evidence
 
-- Tested source: [e7ccaae](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/commit/e7ccaae6e269694bd7a18683a2d115b7667b876a).
-- [Successful Actions run 43041943285](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43041943285), 11 November 2026.
+- Tested source: `e7ccaae6e269694bd7a18683a2d115b7667b876a`.
+- Successful Actions run `43041943285`, 11 November 2026.
 - **39 regression tests passed**; the existing 12-run smoke suite and the new three-run sensitivity smoke completed.
 - **39 study runs:** two thermostat witnesses, eight budget cases, eight penalty cases, 12 matched-window feedback cases and nine held-out cases.
 - All 39 passed equipment audits and independent ODE replay and reached the common recovery target. All 375 optimization calls returned validated incumbents, with zero fallback calls and zero actuator overrides.
@@ -20,7 +20,7 @@ This report describes one executed repeat on synthetic inputs. It preserves the 
 
 [metrics.csv](metrics.csv) contains every metric and gate for all 39 runs. [metrics.jsonl](metrics.jsonl) preserves the exact JSON metric records emitted to the job log. [manifest.json](manifest.json), [frozen-settings.json](frozen-settings.json), and [provenance.json](provenance.json) preserve the executed configuration and source/artifact identity. CSV values were reconstructed from those logged metric records; JSON records retain their original numeric spelling.
 
-The [full artifact](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43041943285/artifacts/13866317642) contains all 375 per-call records in `solves.csv`, 39 trajectories, seven comparison figures, and the runner's generated report. GitHub records its expiration as 9 February 2027; these checked-in summaries, metrics and settings remain in repository history. Per-call rows and trajectory/figure files have not been copied into this permanent archive.
+The full artifact (artifact `13866317642`, run `43041943285`) contains all 375 per-call records in `solves.csv`, 39 trajectories, seven comparison figures, and the runner's generated report. GitHub records its expiration as 9 February 2027; these checked-in summaries, metrics and settings remain in repository history. Per-call rows and trajectory/figure files have not been copied into this permanent archive.
 
 ## Reading the gates and costs
 
@@ -148,3 +148,7 @@ No held-out optimizer run passed the every-call 1% quality gate. MPC used roughl
 This study used one repeat, two nominal surrogate days, four short feedback cases and three held-out cases. It provides no confidence intervals, field validation or universal controller ranking. The acceptable thermostat witnesses do not certify that the optimizer has found the best acceptable solution.
 
 Repeated runs, stronger solver/formulation diagnostics, larger independent held-out sets, and full-day comparisons with matched horizons and explicitly controlled total computation remain unexecuted. Any next study should declare its settings and new evaluation inputs before inspecting its outcomes. The previous reference files and this study's raw evidence should remain separate.
+
+## Privacy note
+
+Personal repository URLs were removed on 16 November 2026. Scientific values, source-revision hashes and numeric run/artifact identifiers remain unchanged. These identifiers can still lead to original hosting metadata; see [privacy scope and remaining work](../../docs/privacy.md).

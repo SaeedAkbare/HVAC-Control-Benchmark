@@ -70,4 +70,4 @@ A low bill with failed service is not an equivalent-service saving. The ten-seco
 
 This is an AI-assisted educational simulation, with [attribution](ACKNOWLEDGMENTS.md) and an [MIT license](LICENSE). It uses a low-order plant, perfect current observations and known prices. Humidity, solar gains, equipment delays and multizone effects are omitted. One synthetic repeat provides no field-savings, deployment or general robustness claim.
 
-Earlier soft-constraint reports are preserved as superseded evidence; current claims use the corrected hard-constraint results. [Transfer notes](docs/transfer.md) list the remaining account-specific checks.
+Earlier soft-constraint reports are preserved as superseded evidence; current claims use the corrected hard-constraint results. [Transfer notes](docs/transfer.md) list the remaining account-specific checks. [Privacy status](docs/privacy.md) distinguishes current-file cleanup from the pending history cleanup.

@@ -20,4 +20,4 @@ Suggested image: [executed summer occupancy comparison](../reports/corrected-202
 
 Image caption: “Synthetic summer occupancy disturbance. Temperature, CO2 and electrical power for three controllers; shaded region is common recovery. The frozen plan violates realized comfort despite being feasible for its original forecast.”
 
-Evidence: [corrected report](../reports/corrected-2026-11-15/README.md), [CI run](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106).
+Evidence: [corrected report](../reports/corrected-2026-11-15/README.md), study Actions run `43710709106`. A later portfolio cleanup passed 58 tests and both smoke suites; see the [validation record](validation.md). Review the outstanding [privacy work](privacy.md) before posting.

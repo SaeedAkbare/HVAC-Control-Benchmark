@@ -4,9 +4,9 @@
 
 These are executed simulation results, using surrogate inputs. This is a **short-budget reference run**, not a certified ranking of the controllers.
 
-- [Tested source](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/commit/322c2bcb1c45cdcfb76b3136fe75051b1e4f3595)
-- [Successful GitHub Actions run](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/42804919624)
-- [Full artifact: traces, metadata, generated plots, and report](https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/42804919624/artifacts/13758946685)
+- `322c2bcb1c45cdcfb76b3136fe75051b1e4f3595`
+- Successful GitHub Actions run `42804919624`
+- Full artifact: traces, metadata, generated plots, and report (artifact `13758946685`, run `42804919624`)
 - [Permanent metrics CSV](metrics.csv)
 - [Run provenance](provenance.json)
 
@@ -110,3 +110,7 @@ A longer-budget and formulation-sensitivity study is needed before economic rank
 | autumn__loss_severe | mpc | 17.408 | 6.827 | 216.786 | 0.0500 | 0.00 | 55/96 |
 
 CSV values were preserved from the JSON metric records emitted by the completed Actions job. No measured-building or field-savings claim is implied. The archive contains the original per-step traces, figures, and environment metadata; it may require GitHub sign-in and has an expiration date. This CSV and provenance file remain in Git history.
+
+## Privacy note
+
+Personal repository URLs were removed on 16 November 2026. Scientific values, source-revision hashes and numeric run/artifact identifiers remain unchanged. These identifiers can still lead to original hosting metadata; see [privacy scope and remaining work](../../docs/privacy.md).

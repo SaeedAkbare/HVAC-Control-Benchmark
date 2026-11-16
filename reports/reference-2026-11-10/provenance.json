@@ -2,11 +2,11 @@
   "run_date": "2026-11-10",
   "record_published_date": "2026-11-11",
   "source_revision": "322c2bcb1c45cdcfb76b3136fe75051b1e4f3595",
-  "repository": "SaeedAkbare/HVAC-Control-Benchmark",
+  "repository": "HVAC-Control-Benchmark",
   "actions_run_id": 42804919624,
   "actions_job_id": 129792041625,
-  "actions_run_url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/42804919624",
-  "full_artifact_url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/42804919624/artifacts/13758946685",
+  "actions_run_url": null,
+  "full_artifact_url": null,
   "full_artifact_digest": "sha256:7a9d447167e0a4d73abbb7e2c950f6569e21073df9104498255e1cd7c78d1f8d",
   "command": "hvac-benchmark --suite full --output results --time-limit 0.5",
   "operating_hours": 24,
@@ -75,5 +75,19 @@
       "maxTerminalTempError": 0.02564128699163959,
       "solveSeconds": 813.0105854300006
     }
+  },
+  "privacy_redaction": {
+    "date": "2026-11-16",
+    "fields": [
+      "repository",
+      "actions_run_url",
+      "full_artifact_url"
+    ],
+    "reason": "Personal repository identity and hosting URLs removed from distributable files.",
+    "scientific_values_unchanged": true,
+    "original_source_revisions_and_run_ids_retained": true,
+    "reachable_history_anonymized": false,
+    "note": "See docs/privacy.md. Original identifiers can still lead to GitHub-hosted metadata until a supported history and hosting cleanup is completed.",
+    "original_values_retained_in_this_file": false
   }
 }

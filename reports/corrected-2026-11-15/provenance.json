@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "recorded_date": "2026-11-15",
-  "repository": "SaeedAkbare/HVAC-Control-Benchmark",
+  "repository": "HVAC-Control-Benchmark",
   "source_revision": "1150f15ee7211b57f0d24907268616854276c8a2",
-  "source_url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/commit/1150f15ee7211b57f0d24907268616854276c8a2",
+  "source_url": null,
   "workflow": {
     "id": 43710709106,
-    "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106",
+    "url": null,
     "status": "completed",
     "conclusion": "success",
     "created_at": "2026-11-15T11:48:39Z",
@@ -18,21 +18,21 @@
       "name": "test",
       "status": "completed",
       "conclusion": "success",
-      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106/job/132801416369"
+      "url": null
     },
     {
       "id": 132801642121,
       "name": "corrected",
       "status": "completed",
       "conclusion": "success",
-      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106/job/132801642121"
+      "url": null
     },
     {
       "id": 132801643626,
       "name": "full",
       "status": "completed",
       "conclusion": "skipped",
-      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106/job/132801643626"
+      "url": null
     }
   ],
   "commands": {
@@ -88,7 +88,7 @@
     {
       "id": 14160459146,
       "name": "corrected-results",
-      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106/artifacts/14160459146",
+      "url": null,
       "digest": "sha256:b6b85f56ea046fd7494ac4df1dbab2ec39febeff436a51ff5e90b201db72c637",
       "size_in_bytes": 1782508,
       "created_at": "2026-11-15T12:01:50Z",
@@ -97,7 +97,7 @@
     {
       "id": 14160188078,
       "name": "smoke-results",
-      "url": "https://github.com/SaeedAkbare/HVAC-Control-Benchmark/actions/runs/43710709106/artifacts/14160188078",
+      "url": null,
       "digest": "sha256:33251867abac190620f80150c02ac17cbfbddb71ef5147f48e0fc114387a2b70",
       "size_in_bytes": 625515,
       "created_at": "2026-11-15T11:49:33Z",
@@ -110,7 +110,7 @@
     "protocol_and_manifest": "Exact HARD_PROTOCOL and HARD_COMPLETE payloads.",
     "figures": "Exact SVG text and PNG bytes emitted by the executed Matplotlib code as HARD_FIGURE payloads.",
     "readme": "Analysis and rounded tables from executed evidence; no invented performance values.",
-    "full_traces": "Remain in the linked Actions artifact."
+    "full_traces": "Remain in the Actions artifact identified above; its personal hosting URL was removed."
   },
   "scope": {
     "objective": "energy cost only",
@@ -128,6 +128,25 @@
       "reports/reference-2026-11-10",
       "reports/sensitivity-2026-11-11"
     ],
-    "status": "superseded; raw metrics/settings/provenance preserved; README banners added"
+    "status": "superseded; scientific records preserved; README banners and explicit hosting-identifier redactions recorded"
+  },
+  "privacy_redaction": {
+    "date": "2026-11-16",
+    "fields": [
+      "repository",
+      "source_url",
+      "workflow.url",
+      "jobs.0.url",
+      "jobs.1.url",
+      "jobs.2.url",
+      "artifacts.0.url",
+      "artifacts.1.url"
+    ],
+    "reason": "Personal repository identity and hosting URLs removed from distributable files.",
+    "scientific_values_unchanged": true,
+    "original_source_revisions_and_run_ids_retained": true,
+    "reachable_history_anonymized": false,
+    "note": "See docs/privacy.md. Original identifiers can still lead to GitHub-hosted metadata until a supported history and hosting cleanup is completed.",
+    "original_values_retained_in_this_file": false
   }
 }
